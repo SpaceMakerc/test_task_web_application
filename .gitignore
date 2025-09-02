@@ -1,0 +1,11 @@
+# Python
+__Python__/
+
+# venv
+
+/venv/
+.venv/
+/.env
+
+# IDE
+/.idea/
