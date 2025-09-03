@@ -13,7 +13,6 @@ class GetUserMiddleware:
     # TODO доработай логику чтобы вытаскивать пользователя
     def process_view(self, request, view_func, view_args, view_kwargs):
         cookie = request.COOKIES
-        print(cookie)
         token = cookie.get("Authorization", None)
         print(f"{token} - token")
         return None

@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
-from small_web.serializers import CustomUsersSerializer
+from small_web.serializers import CustomUsersSignUpSerializer
 
 # Create your views here.
 
@@ -20,7 +20,7 @@ class SignUp(APIView):
     template_name = "signup.html"
 
     def get(self, request):
-        serializer = CustomUsersSerializer()
+        serializer = CustomUsersSignUpSerializer()
         return Response({"serializer": serializer})
 
     def post(self, request):
