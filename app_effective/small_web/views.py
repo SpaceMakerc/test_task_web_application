@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
+from small_web.serializers import CustomUsersSerializer
+
 # Create your views here.
 
 
@@ -10,4 +12,17 @@ class IndexAPI(APIView):
     template_name = "index.html"
 
     def get(self, request):
+        return Response(template_name="index.html")
+
+
+class SignUp(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "signup.html"
+
+    def get(self, request):
+        serializer = CustomUsersSerializer()
+        return Response({"serializer": serializer})
+
+    def post(self, request):
+        result = request.POST
         return Response(template_name="index.html")
