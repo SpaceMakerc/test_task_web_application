@@ -30,6 +30,8 @@ SECRET_KEY = os.getenv("secret_key")
 PRIVATE_KEY_PATH = BASE_DIR / "small_web" / "certs" / "private.pem"
 PUBLIC_KEY_PATH = BASE_DIR / "small_web" / "certs" / "public.pem"
 
+ACCESS_TOKEN_EXPIRE_MINUTES = 3
+
 ALGORITHM = "RS256"
 
 # SECURITY WARNING: don't run with debug turned on in production!

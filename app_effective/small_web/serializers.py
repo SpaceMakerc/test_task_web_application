@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from small_web.models import CustomUsers
+from small_web.utils.utils_password import modify_password
 
 
 class CustomUsersSignUpSerializer(serializers.ModelSerializer):
@@ -17,10 +18,15 @@ class CustomUsersSignUpSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
-            raise serializers.ValidationError(
-                "Значения паролей должны быть одинаковыми"
-            )
+            raise serializers.ValidationError({
+                "password": "Значения паролей должны быть одинаковыми"
+            })
+        attrs["password"] = modify_password(attrs["password"])
         return attrs
+
+    def create(self, validated_data):
+        del validated_data["password2"]
+        return CustomUsers.objects.create(**validated_data)
 
     class Meta:
         model = CustomUsers

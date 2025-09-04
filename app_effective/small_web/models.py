@@ -11,9 +11,9 @@ class CustomUsers(models.Model):
         max_length=50, null=False, verbose_name="Фамилия"
     )
     email = models.EmailField(
-        null=False, verbose_name="Почта"
+        null=False, verbose_name="Почта", unique=True
     )
-    password = models.CharField(
+    password = models.BinaryField(
         null=False, verbose_name="Пароль"
     )
 
