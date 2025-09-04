@@ -12,7 +12,7 @@ class CustomUsersSignUpSerializer(serializers.ModelSerializer):
     )
     password2 = serializers.CharField(
         style={"input_type": "password"},
-        error_messages={"blank": "Поле пароль не может быть пустым"},
+        error_messages={"blank": "Поле Пароль не может быть пустым"},
         label="Повторите пароль",
     )
 
@@ -48,3 +48,19 @@ class CustomUsersSignUpSerializer(serializers.ModelSerializer):
                 },
             },
         }
+
+
+class CustomUsersSignInSerializer(serializers.Serializer):
+    email = serializers.EmailField(
+        allow_null=False,
+        error_messages={"blank": "Поле Почта не может быть пустым"},
+        label="Почта"
+    )
+    password = serializers.CharField(
+        style={"input_type": "password"},
+        error_messages={"blank": "Поле пароль не может быть пустым"},
+        label="Пароль"
+    )
+
+    class Meta:
+        fields = ("email", "password")

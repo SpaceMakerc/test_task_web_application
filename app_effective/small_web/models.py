@@ -11,7 +11,7 @@ class CustomUsers(models.Model):
         max_length=50, null=False, verbose_name="Фамилия"
     )
     email = models.EmailField(
-        null=False, verbose_name="Почта", unique=True
+        null=False, verbose_name="Почта"
     )
     password = models.BinaryField(
         null=False, verbose_name="Пароль"
@@ -19,3 +19,8 @@ class CustomUsers(models.Model):
 
     class Meta:
         db_table = "custom_users"
+        constraints = [
+            models.UniqueConstraint(
+                fields=("email",), name="unique_email_constraint"
+            )
+        ]
