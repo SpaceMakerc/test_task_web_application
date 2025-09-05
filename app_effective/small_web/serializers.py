@@ -64,3 +64,9 @@ class CustomUsersSignInSerializer(serializers.Serializer):
 
     class Meta:
         fields = ("email", "password")
+
+
+class CustomUserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUsers
+        fields = ("id", "name", "surname", "email")

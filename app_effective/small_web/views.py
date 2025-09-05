@@ -5,9 +5,13 @@ from rest_framework.response import Response
 from small_web.serializers import (
     CustomUsersSignUpSerializer,
     CustomUsersSignInSerializer,
+    CustomUserInfoSerializer
 )
 from small_web.utils.utils_jwt import encode_jwt
 from small_web.utils.utils_password import validate_registered_user
+from small_web.utils.utils_user_auth import checker_auth
+
+from small_web.dao.user_dao import CustomUserDAO
 
 # Create your views here.
 
@@ -71,3 +75,16 @@ class SignIn(APIView):
             return response
         else:
             return Response({"serializer": serializer})
+
+
+class AccountAPI(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "account.html"
+
+    @checker_auth
+    def get(self, request):
+        user_dao = CustomUserDAO(user_info=request.user_info["sub"])
+        permission = user_dao.get_permissions()
+        data = user_dao.get_sample(permission=permission)
+        serializer = CustomUserInfoSerializer(data, many=True)
+        return Response({"serializer": serializer})

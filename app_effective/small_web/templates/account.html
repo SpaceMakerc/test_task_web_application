@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>KEEP MOVING FORWARD!!!!!</h1>
+{% for i in serializer.data %}
+<p>Имя - {{ i.name }}</p>
+<p>Почта - {{ i.email }}</p>
+<p>Фамилия - {{ i.surname }}</p>
+{% endfor %}
+
+{% endblock content %}

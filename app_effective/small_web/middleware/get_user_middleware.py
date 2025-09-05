@@ -1,7 +1,3 @@
-from django.http import HttpResponseForbidden
-from django.template.loader import render_to_string
-
-
 class GetUserMiddleware:
     def __init__(self, next):
         self.next = next
@@ -15,8 +11,3 @@ class GetUserMiddleware:
         token = cookie.get("Access-Token", None).split(" ")[1]
         request.custom_user = token
         return None
-        # if not token:
-        #     answer = render_to_string(
-        #         template_name="exceptions/forbidden_page.html"
-        #     )
-        #     return HttpResponseForbidden(answer)
