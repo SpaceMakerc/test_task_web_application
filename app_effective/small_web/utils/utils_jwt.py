@@ -30,6 +30,6 @@ def decode_jwt(
 ):
     try:
         decoded = jwt.decode(jwt=token, key=public_key, algorithms=algorithm)
-    except InvalidTokenError as er:
+    except InvalidTokenError:
         return None
     return decoded
