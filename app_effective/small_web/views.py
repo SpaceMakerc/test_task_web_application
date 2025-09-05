@@ -67,7 +67,7 @@ class SignIn(APIView):
             token = encode_jwt(payload)
 
             response = Response(template_name="index.html")
-            response.set_cookie(key="Authorization", value=token)
+            response.set_cookie(key="Access-Token", value=f"Bearer {token}")
             return response
         else:
             return Response({"serializer": serializer})

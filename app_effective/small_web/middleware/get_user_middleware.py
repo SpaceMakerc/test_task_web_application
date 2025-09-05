@@ -10,11 +10,10 @@ class GetUserMiddleware:
         response = self.next(request)
         return response
 
-    # TODO доработай логику чтобы вытаскивать пользователя
     def process_view(self, request, view_func, view_args, view_kwargs):
         cookie = request.COOKIES
-        token = cookie.get("Authorization", None)
-        print(f"{token} - token")
+        token = cookie.get("Access-Token", None).split(" ")[1]
+        request.custom_user = token
         return None
         # if not token:
         #     answer = render_to_string(

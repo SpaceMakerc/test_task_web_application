@@ -1,4 +1,5 @@
 import jwt
+from jwt.exceptions import InvalidTokenError
 
 from datetime import datetime, timedelta
 
@@ -27,5 +28,8 @@ def decode_jwt(
         public_key: str = settings.PUBLIC_KEY_PATH.read_text(),
         algorithm: str = settings.ALGORITHM
 ):
-    decoded = jwt.decode(jwt=token, key=public_key, algorithm=algorithm)
+    try:
+        decoded = jwt.decode(jwt=token, key=public_key, algorithms=algorithm)
+    except InvalidTokenError as er:
+        return None
     return decoded
