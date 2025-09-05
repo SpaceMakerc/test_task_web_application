@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from small_web.serializers import (
     CustomUsersSignUpSerializer,
     CustomUsersSignInSerializer,
-    CustomUserInfoSerializer
+    CustomUserInfoSerializer,
+    CustomSerializerUpdateInfoSerializer
 )
 from small_web.utils.utils_jwt import encode_jwt
 from small_web.utils.utils_password import validate_registered_user
@@ -24,7 +25,7 @@ class IndexAPI(APIView):
         return Response(template_name="index.html")
 
 
-class SignUp(APIView):
+class SignUpAPI(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "signup.html"
 
@@ -42,7 +43,7 @@ class SignUp(APIView):
         return Response(template_name="index.html")
 
 
-class SignIn(APIView):
+class SignInAPI(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "signin.html"
 
@@ -88,3 +89,30 @@ class AccountAPI(APIView):
         data = user_dao.get_sample(permission=permission)
         serializer = CustomUserInfoSerializer(data, many=True)
         return Response({"serializer": serializer})
+
+
+class ChangeUserInfoAPI(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "change_user.html"
+
+    @checker_auth
+    def get(self, request):
+        user_dao = CustomUserDAO(user_info=request.user_info["sub"])
+        permission = user_dao.get_permissions()
+        data = user_dao.get_sample(permission=permission)
+        serializer = CustomSerializerUpdateInfoSerializer(data[0])
+        return Response({"serializer": serializer})
+
+    @checker_auth
+    def post(self, request):
+        user_dao = CustomUserDAO(user_info=request.user_info["sub"])
+        permission = user_dao.get_permissions()
+        data = user_dao.get_sample(permission=permission)
+        if user_dao.post_sample(permission=permission):
+            serializer = CustomSerializerUpdateInfoSerializer(
+                data=request.POST, instance=data[0]
+            )
+            if serializer.is_valid():
+                serializer.save()
+                return Response(template_name="index.html")
+            return Response({"serializer": serializer})

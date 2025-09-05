@@ -28,5 +28,6 @@ class CustomUserDAO(AbstractDAO):
         raise get_forbidden_answer()
 
     def post_sample(self, permission):
-        ...
-
+        if permission.post:
+            return True
+        raise get_forbidden_answer()

@@ -70,3 +70,18 @@ class CustomUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUsers
         fields = ("id", "name", "surname", "email")
+
+
+class CustomSerializerUpdateInfoSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        instance.id = validated_data.get('id', instance.id)
+        instance.name = validated_data.get('name', instance.name)
+        instance.surname = validated_data.get('surname', instance.surname)
+        instance.email = validated_data.get('email', instance.email)
+        instance.password = validated_data.get('password', instance.password)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = CustomUsers
+        fields = ("name", "surname", "email")
