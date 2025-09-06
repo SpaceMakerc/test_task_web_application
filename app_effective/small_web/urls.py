@@ -8,7 +8,17 @@ urlpatterns = [
     path("signin/", views.SignInAPI().as_view(), name="signin_page"),
     path("account/", views.AccountAPI.as_view(), name="account_page"),
     path(
-        "change_user/<int:user_id>/", views.ChangeUserInfoAPI.as_view(),
+        "change_user/<int:user_id>/",
+        views.ChangeUserInfoAPI.as_view(),
         name="change_user"
     ),
+    path(
+        "admin_permissions/",
+        views.PermissionPageForAdmin.as_view(),
+        name="permissions_admin"
+    ),
+    path(
+        "change_permission/<int:access_id>",
+        views.ChangePermissionForAdmin.as_view(),
+        name="change_permission")
 ]

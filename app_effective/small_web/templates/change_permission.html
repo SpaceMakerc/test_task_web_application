@@ -2,7 +2,7 @@
 {% load rest_framework %}
 
 {% block content %}
-<h1>Изменить данные</h1>
+<h1>Изменить права доступа</h1>
 <form method="post">
   {% csrf_token %}
   {% render_form serializer template_pack='rest_framework/vertical' %}

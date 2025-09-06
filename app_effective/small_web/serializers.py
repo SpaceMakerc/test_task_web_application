@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from small_web.models import CustomUsers
+from small_web.models import CustomUsers, CustomPermissions, AccessTypes
 from small_web.utils.utils_password import modify_password
 
 
@@ -85,3 +85,104 @@ class CustomSerializerUpdateInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUsers
         fields = ("name", "surname", "email")
+        extra_kwargs = {
+            "name": {
+                "error_messages": {
+                    "blank": "Поле Имя не может быть пустым",
+                },
+            },
+            "surname": {
+                "error_messages": {
+                    "blank": "Поле Фамилия не может быть пустым",
+                },
+            },
+            "email": {
+                "error_messages": {
+                    "blank": "Поле Почта не может быть пустым",
+                },
+            },
+        }
+
+
+class CustomPermissionSerializer(serializers.ModelSerializer):
+
+    def update(self, instance, validated_data):
+        instance.id = validated_data.get(
+            'id', instance.id
+        )
+        instance.get = validated_data.get(
+            'get', instance.get
+        )
+        instance.post = validated_data.get(
+            'post', instance.post
+        )
+        instance.table_name = validated_data.get(
+            'table_name', instance.table_name
+        )
+        instance.description = validated_data.get(
+            'description', instance.description
+        )
+        instance.all_samples = validated_data.get(
+            'all_samples', instance.all_samples
+        )
+        instance.access_type = self.get_access_type(
+            validated_data.get('access_type'), instance.access_type
+        )
+        instance.save()
+        return instance
+
+    def get_access_type(self, access, old_access):
+        new_access = None
+        if access:
+            new_access = AccessTypes.objects.get(name=access)
+        return new_access if new_access else old_access
+
+    get = serializers.BooleanField(
+        allow_null=False,
+        error_messages={"blank": "Поле GET не может быть пустым"},
+        label="Метод GET"
+    )
+    post = serializers.BooleanField(
+        allow_null=False,
+        error_messages={"blank": "Поле POST не может быть пустым"},
+        label="Метод POST"
+    )
+    table_name = serializers.CharField(
+        allow_null=False,
+        error_messages={"blank": "Поле Название таблицы не может быть пустым"},
+        label="Название таблицы"
+    )
+    description = serializers.CharField(
+        allow_null=False,
+        error_messages={"blank": "Поле Описание таблицы не может быть пустым"},
+        label="Описание"
+    )
+    all_samples = serializers.BooleanField(
+        allow_null=False,
+        error_messages={
+            "blank": "Поле Показа экземпляров таблицы не может быть пустым"
+        },
+        label="Показать все экземпляры"
+    )
+    access_type = serializers.CharField(
+        allow_null=False,
+        error_messages={
+            "blank": "Поле Тип доступа не может быть пустым"
+        },
+        label="Тип доступа ('base_user' - обычный пользователь, 'admin' - "
+              "пользователь с повышенными правами)"
+    )
+
+    class Meta:
+        model = CustomPermissions
+        fields = (
+            "id", "get", "post", "table_name",
+            "description", "all_samples", "access_type"
+        )
+        extra_kwargs = {
+            "id": {
+                "error_messages": {
+                    "blank": "Поле ID не может быть пустым",
+                },
+            }
+        }

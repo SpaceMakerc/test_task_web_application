@@ -1,18 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework import status
 
 from small_web.serializers import (
     CustomUsersSignUpSerializer,
     CustomUsersSignInSerializer,
     CustomUserInfoSerializer,
-    CustomSerializerUpdateInfoSerializer
+    CustomSerializerUpdateInfoSerializer,
+    CustomPermissionSerializer,
 )
 from small_web.utils.utils_jwt import encode_jwt
 from small_web.utils.utils_password import validate_registered_user
 from small_web.utils.utils_user_auth import checker_auth
 
 from small_web.dao.user_dao import CustomUserDAO
+from small_web.dao.permission_dao import CustomPermissionDAO
 
 # Create your views here.
 
@@ -64,8 +67,9 @@ class SignInAPI(APIView):
             if not user_check:
                 return Response({
                     "serializer": serializer,
-                    "answer": "Пользователь с такими данными не найден"
-                })
+                    "answer": "Пользователь с такими данными не найден",
+                }, status=status.HTTP_401_UNAUTHORIZED
+                )
 
             payload = {
                 "sub": user_check.email,
@@ -90,7 +94,8 @@ class AccountAPI(APIView):
         permission = user_dao.get_permissions()
         data = user_dao.get_sample(permission=permission)
         serializer = CustomUserInfoSerializer(data, many=True)
-        return Response({"serializer": serializer})
+        is_admin = permission.all_samples
+        return Response({"serializer": serializer, "is_admin": is_admin})
 
 
 class ChangeUserInfoAPI(APIView):
@@ -112,6 +117,46 @@ class ChangeUserInfoAPI(APIView):
         data = user_dao.get_sample(permission=permission, mark=user_id)
         if user_dao.post_sample(permission=permission):
             serializer = CustomSerializerUpdateInfoSerializer(
+                data=request.POST, instance=data[0]
+            )
+            if serializer.is_valid():
+                serializer.save()
+                return Response(template_name="index.html")
+            return Response({"serializer": serializer})
+
+
+class PermissionPageForAdmin(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "permissions_for_admin.html"
+
+    @checker_auth
+    def get(self, request):
+        user_dao = CustomPermissionDAO(user_info=request.user_info["sub"])
+        permission = user_dao.get_permissions()
+        data = user_dao.get_sample(permission=permission)
+        serializer = CustomPermissionSerializer(data, many=True)
+        return Response({"serializer": serializer})
+
+
+class ChangePermissionForAdmin(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "change_permission.html"
+
+    @checker_auth
+    def get(self, request, access_id):
+        user_dao = CustomPermissionDAO(user_info=request.user_info["sub"])
+        permission = user_dao.get_permissions()
+        data = user_dao.get_sample(permission=permission, mark=access_id)
+        serializer = CustomPermissionSerializer(data[0])
+        return Response({"serializer": serializer})
+
+    @checker_auth
+    def post(self, request, access_id):
+        user_dao = CustomPermissionDAO(user_info=request.user_info["sub"])
+        permission = user_dao.get_permissions()
+        data = user_dao.get_sample(permission=permission, mark=access_id)
+        if user_dao.post_sample(permission=permission):
+            serializer = CustomPermissionSerializer(
                 data=request.POST, instance=data[0]
             )
             if serializer.is_valid():

@@ -2,6 +2,10 @@
 
 {% block content %}
 <h1>Личный кабинет</h1>
+{% if is_admin %}
+<p><a href="{% url 'permissions_admin' %}">Просмотр и изменение прав</a></p>
+{% endif %}
+<p>Личная информация</p>
 {% for i in serializer.data %}
 <p><a href="{% url 'change_user' user_id=i.id %}">Имя - {{ i.name }}</a></p>
 <p>Почта - {{ i.email }}</p>

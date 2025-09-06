@@ -40,15 +40,6 @@ class CustomUserDAO(AbstractDAO):
                 return mark_samples if mark_samples[0].email == self.user_email\
                     else get_forbidden_answer()
 
-
-            # if mark and permission.all_samples:
-            #     mark_samples = CustomUsers.objects.filter(pk=mark)
-            #     return mark_samples
-            # elif mark and not permission.all_samples:
-            #     mark_samples = CustomUsers.objects.filter(pk=mark)
-            #     return mark_samples if mark_samples[0].email == self.user_email\
-            #         else get_forbidden_answer()
-
             if permission.all_samples:
                 samples = CustomUsers.objects.all()
                 return samples
