@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>KEEP MOVING FORWARD!!!!!</h1>
+<h1>Личный кабинет</h1>
 {% for i in serializer.data %}
-<p><a href="{% url 'change_user' %}">Имя - {{ i.name }}</a></p>
+<p><a href="{% url 'change_user' user_id=i.id %}">Имя - {{ i.name }}</a></p>
 <p>Почта - {{ i.email }}</p>
 <p>Фамилия - {{ i.surname }}</p>
 {% endfor %}

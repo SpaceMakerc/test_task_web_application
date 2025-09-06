@@ -9,7 +9,7 @@ class AbstractDAO(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_sample(self, permission):
+    def get_sample(self, permission, mark):
         raise NotImplementedError
 
     @abstractmethod

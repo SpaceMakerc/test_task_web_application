@@ -1,13 +1,19 @@
 from small_web.dao.interface_dao import AbstractDAO
-from small_web.models import CustomUsers, UserAccess, CustomPermissions
+from small_web.models import (
+    CustomUsers,
+    UserAccess,
+    CustomPermissions,
+    AccessTypes
+)
 from small_web.utils.utils_user_auth import get_forbidden_answer
 
 
 class CustomUserDAO(AbstractDAO):
 
-    def __init__(self, user_info):
+    def __init__(self, user_info=None, instance=None):
         self.user_email = user_info
         self.table_name = CustomUsers._meta.db_table
+        self.instance = instance
 
     def get_permissions(self):
         user_access = UserAccess.objects.select_related("users").get(
@@ -18,8 +24,31 @@ class CustomUserDAO(AbstractDAO):
         ).first()
         return permission
 
-    def get_sample(self, permission):
+    def get_sample(self, permission, mark=None):
+        """
+        Если передан признак определенного пользователя, то получить любого
+        пользователя может только user с правами admin, иначе user может
+        получить только себя
+        Если признак не передан, то получаем информацию в соответствии с правами
+        пользователей
+        """
         if permission.get:
+            if mark:
+                mark_samples = CustomUsers.objects.filter(pk=mark)
+                if permission.all_samples:
+                    return mark_samples
+                return mark_samples if mark_samples[0].email == self.user_email\
+                    else get_forbidden_answer()
+
+
+            # if mark and permission.all_samples:
+            #     mark_samples = CustomUsers.objects.filter(pk=mark)
+            #     return mark_samples
+            # elif mark and not permission.all_samples:
+            #     mark_samples = CustomUsers.objects.filter(pk=mark)
+            #     return mark_samples if mark_samples[0].email == self.user_email\
+            #         else get_forbidden_answer()
+
             if permission.all_samples:
                 samples = CustomUsers.objects.all()
                 return samples
@@ -31,3 +60,7 @@ class CustomUserDAO(AbstractDAO):
         if permission.post:
             return True
         raise get_forbidden_answer()
+
+    def create_access(self):
+        access = AccessTypes.objects.get(name="base_user")
+        return UserAccess.objects.create(users=self.instance, access=access)

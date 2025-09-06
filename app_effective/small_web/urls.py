@@ -7,5 +7,8 @@ urlpatterns = [
     path("signup/", views.SignUpAPI().as_view(), name="signup_page"),
     path("signin/", views.SignInAPI().as_view(), name="signin_page"),
     path("account/", views.AccountAPI.as_view(), name="account_page"),
-    path("change_user/", views.ChangeUserInfoAPI.as_view(), name="change_user"),
+    path(
+        "change_user/<int:user_id>/", views.ChangeUserInfoAPI.as_view(),
+        name="change_user"
+    ),
 ]

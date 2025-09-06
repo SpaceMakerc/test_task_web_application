@@ -38,6 +38,8 @@ class SignUpAPI(APIView):
         serializer = CustomUsersSignUpSerializer(data=user_data)
         if serializer.is_valid():
             serializer.save()
+            user_dao = CustomUserDAO(instance=serializer.instance)
+            user_dao.create_access()
         else:
             return Response({"serializer": serializer})
         return Response(template_name="index.html")
@@ -96,18 +98,18 @@ class ChangeUserInfoAPI(APIView):
     template_name = "change_user.html"
 
     @checker_auth
-    def get(self, request):
+    def get(self, request, user_id):
         user_dao = CustomUserDAO(user_info=request.user_info["sub"])
         permission = user_dao.get_permissions()
-        data = user_dao.get_sample(permission=permission)
+        data = user_dao.get_sample(permission=permission, mark=user_id)
         serializer = CustomSerializerUpdateInfoSerializer(data[0])
         return Response({"serializer": serializer})
 
     @checker_auth
-    def post(self, request):
+    def post(self, request, user_id):
         user_dao = CustomUserDAO(user_info=request.user_info["sub"])
         permission = user_dao.get_permissions()
-        data = user_dao.get_sample(permission=permission)
+        data = user_dao.get_sample(permission=permission, mark=user_id)
         if user_dao.post_sample(permission=permission):
             serializer = CustomSerializerUpdateInfoSerializer(
                 data=request.POST, instance=data[0]

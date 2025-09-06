@@ -8,6 +8,8 @@ class GetUserMiddleware:
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         cookie = request.COOKIES
-        token = cookie.get("Access-Token", None).split(" ")[1]
+        token = cookie.get("Access-Token", None)
+        if token:
+            token = token.split(" ")[1]
         request.custom_user = token
         return None

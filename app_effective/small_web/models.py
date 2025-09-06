@@ -20,6 +20,7 @@ class CustomUsers(models.Model):
         null=False, verbose_name="Пароль"
     )
     is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         db_table = "custom_users"
