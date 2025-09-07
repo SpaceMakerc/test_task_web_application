@@ -1,16 +1,7 @@
-from django.http import HttpResponseForbidden
-from django.template.loader import render_to_string
-
+from small_web.utils.utils_handle_errors import get_forbidden_answer
 from small_web.utils.utils_jwt import decode_jwt, create_jwt, set_cookie
 
 from functools import wraps
-
-
-def get_forbidden_answer(context=None):
-    answer = render_to_string(
-        template_name="exceptions/forbidden_page.html"
-    )
-    return HttpResponseForbidden(answer, context=context)
 
 
 def checker_auth(func):
@@ -37,9 +28,7 @@ def checker_auth(func):
                     all_tokens=False
                 )
                 return response
-            return get_forbidden_answer(
-                context={"error": "Необходимо войти в систему"}
-            )
+            return get_forbidden_answer()
         args[1].user_info = user_by_access_token
         return func(*args, **kwargs)
     return wrapper

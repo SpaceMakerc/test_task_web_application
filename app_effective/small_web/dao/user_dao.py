@@ -5,7 +5,7 @@ from small_web.models import (
     CustomPermissions,
     AccessTypes
 )
-from small_web.utils.utils_user_auth import get_forbidden_answer
+from small_web.utils.utils_handle_errors import get_forbidden_answer
 
 
 class CustomUserDAO(AbstractDAO):
@@ -38,25 +38,19 @@ class CustomUserDAO(AbstractDAO):
                 if permission.all_samples:
                     return mark_samples
                 return mark_samples if mark_samples[0].email == self.user_email\
-                    else get_forbidden_answer(
-                    context={"error": "Необходимо войти в систему"}
-                )
+                    else get_forbidden_answer()
 
             if permission.all_samples:
                 samples = CustomUsers.objects.all()
                 return samples
             samples = CustomUsers.objects.filter(email=self.user_email)
             return samples
-        raise get_forbidden_answer(
-            context={"error": "Необходимо войти в систему"}
-        )
+        raise get_forbidden_answer()
 
     def post_sample(self, permission):
         if permission.post:
             return True
-        raise get_forbidden_answer(
-            context={"error": "Необходимо войти в систему"}
-        )
+        raise get_forbidden_answer()
 
     def create_access(self):
         access = AccessTypes.objects.get(name="base_user")

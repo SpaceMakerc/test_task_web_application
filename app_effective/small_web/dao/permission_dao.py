@@ -1,6 +1,6 @@
 from small_web.dao.interface_dao import AbstractDAO
 from small_web.models import CustomPermissions, UserAccess
-from small_web.utils.utils_user_auth import get_forbidden_answer
+from small_web.utils.utils_handle_errors import get_forbidden_answer
 
 
 class CustomPermissionDAO(AbstractDAO):

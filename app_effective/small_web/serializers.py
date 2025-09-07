@@ -106,6 +106,14 @@ class CustomSerializerUpdateInfoSerializer(serializers.ModelSerializer):
 
 class CustomPermissionSerializer(serializers.ModelSerializer):
 
+    def validate_access_type(self, value):
+        available_permissions = AccessTypes.objects.all()
+        if not any(
+                value == access.name for access in available_permissions
+        ):
+            raise serializers.ValidationError("Несуществующий тип доступа")
+        return value
+
     def update(self, instance, validated_data):
         instance.id = validated_data.get(
             'id', instance.id
@@ -134,7 +142,7 @@ class CustomPermissionSerializer(serializers.ModelSerializer):
     def get_access_type(self, access, old_access):
         new_access = None
         if access:
-            new_access = AccessTypes.objects.get(name=access)
+            new_access = AccessTypes.objects.filter(name=access).first()
         return new_access if new_access else old_access
 
     get = serializers.BooleanField(
