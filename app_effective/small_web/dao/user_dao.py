@@ -38,19 +38,25 @@ class CustomUserDAO(AbstractDAO):
                 if permission.all_samples:
                     return mark_samples
                 return mark_samples if mark_samples[0].email == self.user_email\
-                    else get_forbidden_answer()
+                    else get_forbidden_answer(
+                    context={"error": "Необходимо войти в систему"}
+                )
 
             if permission.all_samples:
                 samples = CustomUsers.objects.all()
                 return samples
             samples = CustomUsers.objects.filter(email=self.user_email)
             return samples
-        raise get_forbidden_answer()
+        raise get_forbidden_answer(
+            context={"error": "Необходимо войти в систему"}
+        )
 
     def post_sample(self, permission):
         if permission.post:
             return True
-        raise get_forbidden_answer()
+        raise get_forbidden_answer(
+            context={"error": "Необходимо войти в систему"}
+        )
 
     def create_access(self):
         access = AccessTypes.objects.get(name="base_user")

@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework import status
+from django.forms.models import model_to_dict
 
 from small_web.serializers import (
     CustomUsersSignUpSerializer,
@@ -10,7 +11,7 @@ from small_web.serializers import (
     CustomSerializerUpdateInfoSerializer,
     CustomPermissionSerializer,
 )
-from small_web.utils.utils_jwt import encode_jwt
+from small_web.utils.utils_jwt import create_jwt, set_cookie
 from small_web.utils.utils_password import validate_registered_user
 from small_web.utils.utils_user_auth import checker_auth
 
@@ -71,14 +72,16 @@ class SignInAPI(APIView):
                 }, status=status.HTTP_401_UNAUTHORIZED
                 )
 
-            payload = {
-                "sub": user_check.email,
-                "username": user_check.name,
-            }
-            token = encode_jwt(payload)
+            access_token, refresh_token = create_jwt(
+                user=model_to_dict(user_check)
+            )
 
             response = Response(template_name="index.html")
-            response.set_cookie(key="Access-Token", value=f"Bearer {token}")
+            set_cookie(
+                response=response,
+                access_token=access_token,
+                refresh_token=refresh_token
+            )
             return response
         else:
             return Response({"serializer": serializer})
@@ -125,7 +128,7 @@ class ChangeUserInfoAPI(APIView):
             return Response({"serializer": serializer})
 
 
-class PermissionPageForAdmin(APIView):
+class PermissionPageForAdminAPI(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "permissions_for_admin.html"
 
@@ -138,7 +141,7 @@ class PermissionPageForAdmin(APIView):
         return Response({"serializer": serializer})
 
 
-class ChangePermissionForAdmin(APIView):
+class ChangePermissionForAdminAPI(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "change_permission.html"
 

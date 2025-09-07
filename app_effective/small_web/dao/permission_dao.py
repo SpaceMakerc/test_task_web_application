@@ -21,7 +21,7 @@ class CustomPermissionDAO(AbstractDAO):
     def get_sample(self, permission, mark=None):
         """
         Так как только user  правами admin может посещать страницу, то всегда
-        отдаём все записси
+        отдаём все записи
         """
         if permission.get:
             if mark:

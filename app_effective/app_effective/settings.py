@@ -31,6 +31,7 @@ PRIVATE_KEY_PATH = BASE_DIR / "small_web" / "certs" / "private.pem"
 PUBLIC_KEY_PATH = BASE_DIR / "small_web" / "certs" / "public.pem"
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 3
+REFRESH_TOKEN_EXPIRE_DAYS = 1
 
 ALGORITHM = "RS256"
 
