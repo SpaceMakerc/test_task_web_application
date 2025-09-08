@@ -22,6 +22,14 @@ class CustomUsersSignUpSerializer(serializers.ModelSerializer):
                 "password": "Значения паролей должны быть одинаковыми"
             })
         attrs["password"] = modify_password(attrs["password"])
+        existed_email = CustomUsers.objects.filter(
+            email=attrs["email"], is_active=True
+        ).exists()
+        if existed_email:
+            raise serializers.ValidationError({
+                "email": "Пользователь с такой почтой уже существует"
+            })
+
         return attrs
 
     def create(self, validated_data):

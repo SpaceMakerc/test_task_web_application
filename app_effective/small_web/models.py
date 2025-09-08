@@ -28,7 +28,7 @@ class CustomUsers(models.Model):
         db_table = "custom_users"
         constraints = [
             models.UniqueConstraint(
-                fields=("email",), name="unique_email_constraint"
+                fields=("email", "is_active"), name="unique_email_constraint"
             )
         ]
 
