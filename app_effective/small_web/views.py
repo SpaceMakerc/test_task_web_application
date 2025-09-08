@@ -14,6 +14,7 @@ from small_web.serializers import (
 from small_web.utils.utils_jwt import create_jwt, set_cookie, delete_cookie
 from small_web.utils.utils_password import validate_registered_user
 from small_web.utils.utils_user_auth import checker_auth
+from small_web.utils.utils_handle_errors import get_forbidden_answer
 
 from small_web.dao.user_dao import CustomUserDAO
 from small_web.dao.permission_dao import CustomPermissionDAO
@@ -119,7 +120,9 @@ class ChangeUserInfoAPI(APIView):
         data = user_dao.get_sample(permission=permission, mark=user_id)
         if user_dao.post_sample(permission=permission):
             serializer = CustomSerializerUpdateInfoSerializer(
-                data=request.POST, instance=data[0]
+                data=request.POST,
+                instance=data[0],
+                context={"user_id": user_id}
             )
             if serializer.is_valid():
                 serializer.save()
@@ -136,6 +139,8 @@ class PermissionPageForAdminAPI(APIView):
         user_dao = CustomPermissionDAO(user_info=request.user_info["sub"])
         permission = user_dao.get_permissions()
         data = user_dao.get_sample(permission=permission)
+        if not data:
+            return get_forbidden_answer()
         serializer = CustomPermissionSerializer(data, many=True)
         return Response({"serializer": serializer})
 
@@ -149,6 +154,8 @@ class ChangePermissionForAdminAPI(APIView):
         user_dao = CustomPermissionDAO(user_info=request.user_info["sub"])
         permission = user_dao.get_permissions()
         data = user_dao.get_sample(permission=permission, mark=access_id)
+        if not data:
+            return get_forbidden_answer()
         serializer = CustomPermissionSerializer(data[0])
         return Response({"serializer": serializer})
 
@@ -157,6 +164,8 @@ class ChangePermissionForAdminAPI(APIView):
         user_dao = CustomPermissionDAO(user_info=request.user_info["sub"])
         permission = user_dao.get_permissions()
         data = user_dao.get_sample(permission=permission, mark=access_id)
+        if not data:
+            return get_forbidden_answer()
         if user_dao.post_sample(permission=permission):
             serializer = CustomPermissionSerializer(
                 data=request.POST, instance=data[0]

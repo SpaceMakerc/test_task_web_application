@@ -28,7 +28,7 @@ def checker_auth(func):
                     refresh=True
                 )
                 return response
-            return get_forbidden_answer()
+            raise get_forbidden_answer()
         args[1].user_info = user_by_access_token
         return func(*args, **kwargs)
     return wrapper

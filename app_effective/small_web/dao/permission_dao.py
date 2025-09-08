@@ -29,7 +29,7 @@ class CustomPermissionDAO(AbstractDAO):
                 return samples
             samples = CustomPermissions.objects.all()
             return samples
-        return get_forbidden_answer()
+        raise get_forbidden_answer()
 
     def post_sample(self, permission):
         if permission.post:

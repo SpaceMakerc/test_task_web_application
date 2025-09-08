@@ -2,7 +2,10 @@ from rest_framework import serializers
 
 from small_web.models import CustomUsers, CustomPermissions, AccessTypes
 from small_web.utils.utils_password import modify_password
-from small_web.utils.utils_validate import email_validation
+from small_web.utils.utils_validate import (
+    email_validation_on_creating,
+    email_validation_on_updating,
+)
 
 
 class CustomUsersSignUpSerializer(serializers.ModelSerializer):
@@ -23,7 +26,7 @@ class CustomUsersSignUpSerializer(serializers.ModelSerializer):
                 "password": "Значения паролей должны быть одинаковыми"
             })
         attrs["password"] = modify_password(attrs["password"])
-        existed_email = email_validation(attrs["email"])
+        existed_email = email_validation_on_creating(attrs["email"])
         if existed_email:
             raise serializers.ValidationError({
                 "email": "Пользователь с такой почтой уже существует"
@@ -82,11 +85,10 @@ class CustomUserInfoSerializer(serializers.ModelSerializer):
 class CustomSerializerUpdateInfoSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
-        print(attrs)
-        existed_email = email_validation(
-            attrs["email"], name=attrs["name"], surname=attrs["surname"]
+        email = email_validation_on_updating(
+            new_email=attrs["email"], user_id=self.context["user_id"]
         )
-        if existed_email:
+        if not email:
             raise serializers.ValidationError({
                 "email": "Пользователь с такой почтой уже существует"
             })
@@ -103,7 +105,7 @@ class CustomSerializerUpdateInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUsers
-        fields = ("name", "surname", "email")
+        fields = ("id", "name", "surname", "email")
         extra_kwargs = {
             "name": {
                 "error_messages": {
