@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Личный кабинет</h1>
+<p><a href="{% url 'logout_page' %}">Выход из системы</a></p>
 {% if is_admin %}
 <p><a href="{% url 'permissions_admin' %}">Просмотр и изменение прав</a></p>
 {% endif %}

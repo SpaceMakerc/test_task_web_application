@@ -11,7 +11,7 @@ from small_web.serializers import (
     CustomSerializerUpdateInfoSerializer,
     CustomPermissionSerializer,
 )
-from small_web.utils.utils_jwt import create_jwt, set_cookie
+from small_web.utils.utils_jwt import create_jwt, set_cookie, delete_cookie
 from small_web.utils.utils_password import validate_registered_user
 from small_web.utils.utils_user_auth import checker_auth
 
@@ -166,3 +166,13 @@ class ChangePermissionForAdminAPI(APIView):
                 serializer.save()
                 return Response(template_name="index.html")
             return Response({"serializer": serializer})
+
+
+class LogoutUserAPI(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+
+    @checker_auth
+    def get(self, request):
+        response = Response(template_name="index.html")
+        delete_cookie(response=response)
+        return response

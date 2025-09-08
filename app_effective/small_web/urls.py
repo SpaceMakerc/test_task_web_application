@@ -37,5 +37,10 @@ urlpatterns = [
         "change_permission/<int:access_id>",
         views.ChangePermissionForAdminAPI.as_view(),
         name="change_permission"
-    )
+    ),
+    path(
+        "account/logout/",
+        views.LogoutUserAPI.as_view(),
+        name="logout_page"
+    ),
 ]

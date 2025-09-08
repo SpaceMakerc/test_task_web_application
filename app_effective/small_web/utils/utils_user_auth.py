@@ -25,7 +25,7 @@ def checker_auth(func):
                 set_cookie(
                     response=response,
                     access_token=access_token,
-                    all_tokens=False
+                    refresh=True
                 )
                 return response
             return get_forbidden_answer()

@@ -76,9 +76,9 @@ def set_cookie(
         response: Response,
         access_token: str = None,
         refresh_token: str = None,
-        all_tokens: bool = True
+        refresh: bool = False
 ) -> Response:
-    if all_tokens:
+    if not refresh:
         response.set_cookie(key="Token-type", value="Bearer")
         response.set_cookie(
             key="Access-Token", value=access_token
@@ -88,4 +88,11 @@ def set_cookie(
         )
         return response
     response.set_cookie(key="Access-Token", value=access_token)
+    return response
+
+
+def delete_cookie(response: Response):
+    response.delete_cookie(key="Token-type")
+    response.delete_cookie(key="Access-Token")
+    response.delete_cookie(key="Refresh-Token")
     return response
