@@ -23,7 +23,6 @@ from small_web.dao.permission_dao import CustomPermissionDAO
 
 class IndexAPI(APIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = "index.html"
 
     def get(self, request):
         return Response(template_name="index.html")
@@ -173,6 +172,21 @@ class LogoutUserAPI(APIView):
 
     @checker_auth
     def get(self, request):
+        response = Response(template_name="index.html")
+        delete_cookie(response=response)
+        return response
+
+
+class DeleteUserAPI(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+
+    @checker_auth
+    def get(self, request):
+        user_dao = CustomUserDAO(user_info=request.user_info["sub"])
+        permission = user_dao.get_permissions()
+        user_dao.delete_user(
+            permission=permission, mark=request.user_info["sub"]
+        )
         response = Response(template_name="index.html")
         delete_cookie(response=response)
         return response

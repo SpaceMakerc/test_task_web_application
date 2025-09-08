@@ -5,7 +5,7 @@
 <h1>Права доступа</h1>
 <p>Для изменения выберите ID записи</p>
 {% for i in serializer.data %}
-<p><a href="{% url 'change_permission' access_id=i.id %}">ID записи - {{ i.id }}</a></p>
+<p><a href="{% url 'change_permission_page' access_id=i.id %}">ID записи - {{ i.id }}</a></p>
 <p>Метод GET - {{ i.get }}</p>
 <p>Метод POST - {{ i.post }}</p>
 <p>Наименование таблицы - {{ i.table_name }}</p>

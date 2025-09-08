@@ -19,6 +19,8 @@ def validate_registered_user(email: str, password: str):
     result = None
     user = CustomUsers.objects.filter(email=email).first()
     if user:
+        if not user.is_active:
+            return result
         db_password = user.password.tobytes()
         auth = check_password(password=password, hashed_password=db_password)
         if auth:

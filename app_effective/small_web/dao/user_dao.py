@@ -47,6 +47,14 @@ class CustomUserDAO(AbstractDAO):
             return samples
         raise get_forbidden_answer()
 
+    def delete_user(self, permission, mark):
+        if permission.get:
+            custom_user = CustomUsers.objects.get(email=mark)
+            custom_user.is_active = False
+            custom_user.save()
+            return custom_user
+        raise get_forbidden_answer()
+
     def post_sample(self, permission):
         if permission.post:
             return True
