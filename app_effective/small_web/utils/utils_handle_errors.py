@@ -13,4 +13,3 @@ def get_unauthorized_answer():
         template_name="exceptions/unauthorized.html"
     )
     return HttpResponse(answer, status=status.HTTP_401_UNAUTHORIZED)
-

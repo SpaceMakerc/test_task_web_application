@@ -1,4 +1,4 @@
-from small_web.utils.utils_handle_errors import get_forbidden_answer, get_unauthorized_answer
+from small_web.utils.utils_handle_errors import get_unauthorized_answer
 from small_web.utils.utils_jwt import decode_jwt, create_jwt, set_cookie
 
 from functools import wraps

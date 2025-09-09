@@ -134,7 +134,7 @@ class AccountAPITestCase(APITestCase):
         """
         self.client.get(reverse("logout_page"))
         response = self.client.get(path=self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class ChangeUserInfoAPITestCase(APITestCase):
@@ -196,7 +196,7 @@ class ChangeUserInfoAPITestCase(APITestCase):
         """
         self.client.get(reverse("logout_page"))
         response = self.client.get(path=self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_account_change_view(self):
         data = {
