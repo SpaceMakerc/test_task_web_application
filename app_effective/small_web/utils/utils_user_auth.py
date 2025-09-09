@@ -1,4 +1,4 @@
-from small_web.utils.utils_handle_errors import get_forbidden_answer
+from small_web.utils.utils_handle_errors import get_forbidden_answer, get_unauthorized_answer
 from small_web.utils.utils_jwt import decode_jwt, create_jwt, set_cookie
 
 from functools import wraps
@@ -28,7 +28,7 @@ def checker_auth(func):
                     refresh=True
                 )
                 return response
-            raise get_forbidden_answer()
+            return get_unauthorized_answer()
         args[1].user_info = user_by_access_token
         return func(*args, **kwargs)
     return wrapper
