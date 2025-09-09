@@ -154,6 +154,9 @@ DATABASE_PORT=порт
 Страница изменения прав доступа
 <img width="1349" height="400" alt="image" src="https://github.com/user-attachments/assets/c53d22ec-68bd-421a-8a9f-bbd42871674c" />
 
+Схема разграниения доступа
+![scheme2](https://github.com/user-attachments/assets/3cb536cf-9b00-4554-95e0-88029fae2f98)
+
 
 
 
