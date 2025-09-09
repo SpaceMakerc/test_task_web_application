@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+
+# venv
+
+/venv/
+.venv/
+/.env
+
+# IDE
+/.idea/
+
+# Auth
+certs/

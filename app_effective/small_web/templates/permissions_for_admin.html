@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+
+{% block content %}
+<h1>Права доступа</h1>
+<p>Для изменения выберите ID записи</p>
+{% for i in serializer.data %}
+<p><a href="{% url 'change_permission_page' access_id=i.id %}">ID записи - {{ i.id }}</a></p>
+<p>Метод GET - {{ i.get }}</p>
+<p>Метод POST - {{ i.post }}</p>
+<p>Наименование таблицы - {{ i.table_name }}</p>
+<p>Описание таблицы - {{ i.description }}</p>
+<p>Показ всех экземпляров - {{ i.all_samples }}</p>
+<p>Тип доступа - {{ i.access_type }}</p>
+{% endfor %}
+{% endblock content %}

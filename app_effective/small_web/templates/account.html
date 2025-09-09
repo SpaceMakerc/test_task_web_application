@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Личный кабинет</h1>
+<p><a href="{% url 'logout_page' %}">Выход из системы</a></p>
+<p><a href="{% url 'delete_user_page' %}">Удалить аккаунт</a></p>
+{% if is_admin %}
+<p><a href="{% url 'permissions_admin_page' %}">Просмотр и изменение прав</a></p>
+{% endif %}
+<p>Личная информация</p>
+{% for i in serializer.data %}
+<p><a href="{% url 'change_user_page' user_id=i.id %}">Имя - {{ i.name }}</a></p>
+<p>Почта - {{ i.email }}</p>
+<p>Фамилия - {{ i.surname }}</p>
+{% endfor %}
+
+{% endblock content %}
